@@ -78,7 +78,7 @@ public class MainPanel extends JPanel {
                         }
                         FileData fileData = analyse(stringBuffer.toString(), name);
                         fileData.toString();
-//                        JOptionPane.showMessageDialog(null, name + "\n" + stringBuffer.toString());
+                        JOptionPane.showMessageDialog(null, fileData.toString());
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -101,7 +101,8 @@ public class MainPanel extends JPanel {
         String packageName = findPackageName(data);
         ArrayList<String> arrLibrary = findArrLibrary(data);
         ArrayList<String> arrFeild = findArrFeild(data);
-        return new FileData(packageName, fileName, arrLibrary, null, arrFeild);
+        ArrayList<String> arrMethod = findAllMethod(data);
+        return new FileData(packageName, fileName, arrLibrary, arrMethod, arrFeild);
     }
 
     private String findPackageName(String data) {
@@ -134,8 +135,9 @@ public class MainPanel extends JPanel {
         for (int j = 0; j < arr.length; j++) {
             String content = arr[j];
             if (!content.contains(CLASS + " ") && !content.contains(PACKAGE + " ") && !content.contains(IMPORT + " ")
-                    && !content.contains("+") && !content.contains("-") && !content.contains("*") && !content.contains("}") && !content.contains("(") && !content.contains(")")
-                    && !content.contains("{") && !content.contains("if") && !content.contains("else") && !content.contains(".") && !content.contains("!=") && !content.contains("return ")) {
+                    && !content.contains("+") && !content.contains("-") && !content.contains("*") && !content.contains("}")
+                    && !content.contains("(") && !content.contains(")") && !content.contains("{") && !content.contains("if")
+                    && !content.contains("else") && !content.contains(".") && !content.contains("!=") && !content.contains("return ") && !content.contains("__")) {
                 if (!arrField.contains(content.trim())) {
                     arrField.add(content.trim());
                 }
@@ -145,9 +147,23 @@ public class MainPanel extends JPanel {
         int startIndex = data.indexOf("{");
         int endIndex = data.indexOf(";", startIndex);
         String firstField = data.substring(startIndex + 1, endIndex).trim();
-        if (!firstField.contains("main")&&!firstField.contains("args")) {
+        if (!firstField.contains("main") && !firstField.contains("args")) {
             arrField.add(0, firstField);
         }
         return arrField;
+    }
+
+    private ArrayList<String> findAllMethod(String data) {
+        ArrayList<String> arrMethod = new ArrayList<>();
+        String[] arrLine = data.split("\n");
+        for (int i = 0; i < arrLine.length; i++) {
+            String line = arrLine[i];
+            if (line.contains("(") && line.contains(")") && line.contains("{") && !line.contains(";") && !line.contains(" if")
+                    && !line.contains(" for") && !line.contains(" while") && !line.contains(" catch") && !line.contains("catch ") && !line.contains(" catch ")
+                    && !line.contains("&&") && !line.contains("=") && !line.contains("!") && !line.contains("||") && !line.contains(".") && !line.contains("new ")) {
+                arrMethod.add(line);
+            }
+        }
+        return arrMethod;
     }
 }

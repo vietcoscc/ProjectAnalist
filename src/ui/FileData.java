@@ -62,15 +62,27 @@ public class FileData {
 
     @Override
     public String toString() {
+        String data = className.trim() + "\n" + packageName.trim() + "\n";
+        String line = "__________________________________________________\n";
+        data = data + line;
         System.out.println(className.trim() + "\n");
         System.out.println(packageName.trim() + "\n");
         for (int i = 0; i < arrLibrary.size(); i++) {
-            System.out.println(arrLibrary.get(i).trim()+"\n");
+            data = data + arrLibrary.get(i).trim() + "\n";
+            System.out.println(arrLibrary.get(i).trim() + "\n");
         }
+        data = data + line;
         for (int i = 0; i < arrField.size(); i++) {
-            System.out.println(arrField.get(i).trim()+"\n");
+            data = data + arrField.get(i).trim() + "\n";
+            System.out.println(arrField.get(i).trim() + "\n");
         }
+        data = data + line;
+        for (int i = 0; i < arrMethod.size(); i++) {
+            data = data + arrMethod.get(i).trim() + "\n";
+            System.out.println(arrMethod.get(i).trim() + "\n");
+        }
+        data = data + line;
         System.out.println("______________________________________________________________________________________________");
-        return super.toString();
+        return data;
     }
 }
